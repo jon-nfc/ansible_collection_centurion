@@ -1,0 +1,38 @@
+INHERIT: website-template/mkdocs.yml
+
+docs_dir: 'docs'
+
+repo_name: Centurion Ansible Collection
+repo_url: https://gitlab.com/nofusscomputing/projects/ansible/collections/centurion
+edit_uri: '/-/ide/project/nofusscomputing/projects/ansible/collections/centurion/edit/development/-/docs/'
+
+nav:
+- Home: index.md
+
+- Articles: 
+
+  - articles/index.md
+
+- Projects: 
+
+  - projects/index.md
+
+  - Ansible:
+
+    - projects/ansible/index.md
+
+    - Collections:
+
+      - projects/ansible/collection/index.md
+
+      - Centurion:
+
+        - projects/ansible/collection/centurion/index.md
+
+
+- Operations: 
+
+  - operations/index.md
+
+- Contact Us: contact.md
+

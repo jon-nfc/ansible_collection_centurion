@@ -1,0 +1,12 @@
+[submodule "roles/nfc_common"]
+	path = roles/nfc_common
+	url = https://gitlab.com/nofusscomputing/projects/ansible/common.git
+	branch = development
+[submodule "website-template"]
+	path = website-template
+	url = https://gitlab.com/nofusscomputing/infrastructure/website-template.git
+	branch = development
+[submodule "gitlab-ci"]
+	path = gitlab-ci
+	url = https://gitlab.com/nofusscomputing/projects/gitlab-ci.git
+	branch = development
