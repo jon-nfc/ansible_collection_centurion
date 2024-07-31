@@ -23,6 +23,11 @@ options:
         required: true
         env:
             - name: CENTURION_API
+    organization_groups:
+        description:
+            - Create groups from organization names. Uses format C(organization_<organization.name>).
+        default: true
+        type: boolean
     token:
         required: false
         description:
@@ -51,6 +56,7 @@ api_endpoint: http://localhost:8000
 token: <token value here>
 validate_certs: false
 
+organization_groups: true
 
 # Example Ansible Tower credential Input Configuration:
 
@@ -147,6 +153,7 @@ class InventoryModule(BaseInventoryPlugin):
         self.api_endpoint = self.get_option("api_endpoint").strip("/")
         self.token = self.get_option("token")
         self.validate_certs = self.get_option("validate_certs")
+        self.organization_groups = self.get_option("organization_groups")
 
         self.headers = {
             'Authorization': f'Token {self.token}'
@@ -163,6 +170,42 @@ class InventoryModule(BaseInventoryPlugin):
 
 
             self.inventory.add_host(host=device['name'])
+
+            if len(device['groups']):
+
+                for group in device['groups']:
+
+                    group_name = to_safe_group_name(
+                        name = str(group['name']).lower(),
+                        replacer = '_',
+                        force = True,
+                    )
+
+                    self.inventory.add_group(
+                        group = group_name
+                    )
+
+                    self.inventory.add_host(
+                        host = device['name'],
+                        group = group_name,
+                    )
+
+            if self.organization_groups:
+
+                organization_group_name = to_safe_group_name(
+                    name = 'organization_' + str(device['organization']['name']).lower(),
+                    replacer = '_',
+                    force = True,
+                )
+
+                self.inventory.add_group(
+                    group = organization_group_name
+                )
+
+                self.inventory.add_host(
+                    host = device['name'],
+                    group = organization_group_name,
+                )
 
             # see #5
             # config = self.fetch_device_config(device['config'])
