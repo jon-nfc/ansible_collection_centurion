@@ -1,3 +1,11 @@
+## 0.3.0 (2024-07-31)
+
+### Feat
+
+- **inventory**: Create groups from organizations
+- **inventory**: Fetch groups and group config
+- **inventory**: remove device config
+
 ## 0.2.0 (2024-07-31)
 
 ### Feat
