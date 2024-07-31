@@ -29,6 +29,12 @@ nav:
 
         - projects/ansible/collection/centurion/index.md
 
+        - Plugins:
+
+          - projects/ansible/collection/centurion/plugins/index.md
+
+          - projects/ansible/collection/centurion/plugins/inventory.md
+
 
 - Operations: 
 

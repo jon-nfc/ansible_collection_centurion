@@ -11,7 +11,6 @@ about: https://gitlab.com/nofusscomputing/projects/ansible/collections/kubernete
 ![Project Status - Active](https://img.shields.io/badge/Project%20Status-Active-green?logo=gitlab&style=plastic) 
 
 
-
 ![Gitlab build status - stable](https://img.shields.io/badge/dynamic/json?color=ff782e&label=Build&query=0.status&url=https%3A%2F%2Fgitlab.com%2Fapi%2Fv4%2Fprojects%2F59504579%2Fpipelines%3Fref%3Dmaster&logo=gitlab&style=plastic) ![Gitlab build status - development](https://img.shields.io/badge/dynamic/json?color=ff782e&label=Build&query=0.status&url=https%3A%2F%2Fgitlab.com%2Fapi%2Fv4%2Fprojects%2F59504579%2Fpipelines%3Fref%3Ddevelopment&logo=gitlab&style=plastic)
 
 
@@ -21,4 +20,9 @@ about: https://gitlab.com/nofusscomputing/projects/ansible/collections/kubernete
 
 </span>
 
-This Ansible Collection is intended to compliement Centurion ERP.
+This Ansible Collection is intended to compliement [Centurion ERP](../../../centurion_erp/index.md).
+
+
+## Features
+
+- [Inventory plugin](./plugins/inventory.md)

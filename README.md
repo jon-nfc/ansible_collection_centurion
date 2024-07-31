@@ -48,6 +48,7 @@ links:
 
 - [Merge Requests (Pull Requests)](https://gitlab.com/nofusscomputing/projects/ansible/collections/centurion_erp_collection/-/merge_requests)
 
+This Ansible collection is a companion collection for [Centurion ERP](https://nofusscomputing.com/projects/centurion_erp/)
 
 
 ## Contributing
