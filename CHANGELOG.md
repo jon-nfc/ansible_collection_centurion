@@ -1,3 +1,9 @@
+## 0.2.0 (2024-07-31)
+
+### Feat
+
+- **inventory**: add inventory file for centurion
+
 ## 0.1.0 (2024-07-31)
 
 ### Feat
