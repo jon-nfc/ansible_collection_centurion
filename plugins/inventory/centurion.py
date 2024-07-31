@@ -62,6 +62,7 @@ fields:
     label: Centurion API Token
     secret: true
   - id: VALIDATE_CENTURION_CERTS
+    label: Validate Centurion SSL Certificate
     type: boolean
 required:
   - CENTURION_API
