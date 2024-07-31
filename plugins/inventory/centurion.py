@@ -1,5 +1,6 @@
 import json
 
+from ansible.inventory.group import to_safe_group_name
 from ansible.module_utils.common.text.converters import to_text
 from ansible.module_utils.urls import open_url
 from ansible.plugins.inventory import BaseInventoryPlugin
@@ -121,6 +122,22 @@ class InventoryModule(BaseInventoryPlugin):
         return config
 
 
+    def fetch_groups(self) -> dict:
+
+        self.display.v("Fetching groups")
+
+        response = open_url(
+            url = f'{self.api_endpoint}/api/configuration/',
+            headers = self.headers,
+            validate_certs = self.validate_certs,
+        )
+
+        configuration = json.loads(to_text(response.read()))['results']
+
+
+        return configuration
+
+
     def parse(self, inventory, loader, path, cache=True):
         super().parse(inventory, loader, path)
 
@@ -153,3 +170,37 @@ class InventoryModule(BaseInventoryPlugin):
             # for key, val in config.items():
 
             #     self.inventory.set_variable(device['name'], key, val)
+
+
+        groups = self.fetch_groups()
+
+        self.display.v(f"Parsing returned groups")
+
+        for group in groups:
+
+            self.display.vv(f"Adding group {group['name']} to inventory")
+
+            group_name = to_safe_group_name(
+                name = str(group['name']).lower(),
+                replacer = '_',
+                force = True,
+            )
+
+            self.inventory.add_group(
+                group = group_name
+            )
+
+            if group['parent']:
+
+                self.display.vv(f"Adding group {group['name']} to parent group {group['parent']['name']}")
+
+                parent_group_name = to_safe_group_name(
+                    name = str(group['parent']['name']).lower(),
+                    replacer = '_',
+                    force = True,
+                )
+
+                self.inventory.add_child(
+                    parent_group_name,
+                    group_name,
+                )
