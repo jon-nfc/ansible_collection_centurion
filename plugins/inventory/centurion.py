@@ -25,7 +25,7 @@ options:
     token:
         required: false
         description:
-            - NetBox API token to be able to read against NetBox.
+            - Centurion API token to be able to read against Centurion.
         env:
             - name: CENTURION_TOKEN
     validate_certs:
@@ -33,23 +33,54 @@ options:
             - Allows skipping of validation of SSL certificates. Set to C(false) to disable certificate validation.
         default: true
         type: boolean
+        env:
+            - name: VALIDATE_CENTURION_CERTS
 author:
     - jon @jon_nfc
 '''
 
 
 
+EXAMPLES = """
+# inventory.yml file in YAML format
+
+plugin: nofusscomputing.centurion.centurion
+
+api_endpoint: http://localhost:8000
+token: <token value here>
+validate_certs: false
+
+
+# Example Ansible Tower credential Input Configuration:
+
+fields:
+  - id: CENTURION_API
+    type: string
+    label: Centurion Host URL
+  - id: CENTURION_TOKEN
+    type: string
+    label: Centurion API Token
+    secret: true
+  - id: VALIDATE_CENTURION_CERTS
+    type: boolean
+required:
+  - CENTURION_API
+  - CENTURION_TOKEN
+
+# Example Ansible Tower credential Injector Configuration:
+
+env:
+  CENTURION_API: '{{ CENTURION_API }}'
+  CENTURION_TOKEN: '{{ CENTURION_TOKEN }}'
+  VALIDATE_CENTURION_CERTS: '{{ VALIDATE_CENTURION_CERTS | default(true) }}'
+
+"""
+
+
+
 class InventoryModule(BaseInventoryPlugin):
 
     NAME = 'nofusscomputing.centurion.centurion'
-
-
-    def __init__(self):
-        super().__init__()
-
-        self.headers = {
-            'Authorization': 'Token 7d501c956363e60df0cfd770db36f54226f079d707346f776ab31d5f40d16542'
-        }
 
 
     def verify_file(self, path):
@@ -62,9 +93,9 @@ class InventoryModule(BaseInventoryPlugin):
         self.display.v("Fetching Devices ")
 
         response = open_url(
-            url = 'https://test.nofusscomputing.com/api/device/',
+            url = f'{self.api_endpoint}/api/device/',
             headers = self.headers,
-            validate_certs=False,
+            validate_certs = self.validate_certs,
         )
 
         devices = json.loads(to_text(response.read()))['results']
@@ -81,7 +112,7 @@ class InventoryModule(BaseInventoryPlugin):
         response = open_url(
             url = url,
             headers = self.headers,
-            validate_certs=False,
+            validate_certs = self.validate_certs,
         )
 
         config = json.loads(to_text(response.read()))
@@ -91,6 +122,17 @@ class InventoryModule(BaseInventoryPlugin):
 
     def parse(self, inventory, loader, path, cache=True):
         super().parse(inventory, loader, path)
+
+        self._read_config_data(path=path)
+
+
+        self.api_endpoint = self.get_option("api_endpoint").strip("/")
+        self.token = self.get_option("token")
+        self.validate_certs = self.get_option("validate_certs")
+
+        self.headers = {
+            'Authorization': f'Token {self.token}'
+        }
 
         devices = self.fetch_devices()
 
