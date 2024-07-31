@@ -147,8 +147,9 @@ class InventoryModule(BaseInventoryPlugin):
 
             self.inventory.add_host(host=device['name'])
 
-            config = self.fetch_device_config(device['config'])
+            # see #5
+            # config = self.fetch_device_config(device['config'])
 
-            for key, val in config.items():
+            # for key, val in config.items():
 
-                self.inventory.set_variable(device['name'], key, val)
+            #     self.inventory.set_variable(device['name'], key, val)
