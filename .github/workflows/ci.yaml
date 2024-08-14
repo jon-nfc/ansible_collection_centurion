@@ -16,6 +16,24 @@ env:
 jobs:
 
 
+  collection:
+    name: 'Ansible Collection'
+    uses: nofusscomputing/action_ansible_collection/.github/workflows/reusable_ansible_collection.yaml@development
+    permissions:
+      pull-requests: write
+      contents: write
+      statuses: write
+      checks: write
+      actions: write
+    with:
+      ANSIBLE_COLLECTION_MARK_RELEASE_LIVE: true
+      ANSIBLE_GALAXY_NAMESPACE: "${{ github.repository_owner }}"
+      ANSIBLE_GALAXY_PACKAGE_NAME: "${{ github.event.repository.name }}"
+      ANSIBLE_LINTING_MUST_PASS: true
+    secrets:
+      ANSIBLE_GALAXY_UPLOAD_TOKEN: ${{ secrets.ANSIBLE_GALAXY_UPLOAD_TOKEN }}
+
+
   gitlab-mirror:
     if: ${{ github.repository == 'nofusscomputing/ansible_collection_centurion' }}
     runs-on: ubuntu-latest
