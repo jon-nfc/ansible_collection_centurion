@@ -19,6 +19,12 @@ jobs:
   collection:
     name: 'Ansible Collection'
     uses: nofusscomputing/action_ansible_collection/.github/workflows/reusable_ansible_collection.yaml@development
+    permissions:
+      pull-requests: write
+      contents: write
+      statuses: write
+      checks: write
+      actions: write
     with:
       ANSIBLE_COLLECTION_MARK_RELEASE_LIVE: true
       ANSIBLE_GALAXY_NAMESPACE: "${{ github.repository_owner }}"
