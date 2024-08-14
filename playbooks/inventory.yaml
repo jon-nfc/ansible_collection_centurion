@@ -1,0 +1,172 @@
+- name: Inventory
+  hosts: |-
+    {%- if nfc_pb_host is defined -%}
+      {{ nfc_pb_host }}
+    {%- else -%}
+      all
+    {%- endif %}
+  become: true
+
+
+  tasks:
+
+
+    - name: Inventory host
+      block:
+    
+      - name: Test Packages
+        ansible.builtin.package_facts:
+          manager: auto
+        become: true
+
+
+      - name: Inventory Details
+        ansible.builtin.set_fact:
+          details: {
+            "name": "{{ ansible_hostname }}",
+            "serial_number": "{{ ansible_product_serial }}",
+            "uuid": "{{ ansible_product_uuid }}"
+          }
+
+
+      - name: Inventory Software [a-k]
+        ansible.builtin.set_fact:
+          cacheable: false
+          software: "{{ software | default([]) + [{
+              'name': package.value[0].name,
+              'category': package.value[0].category | default(''),
+              'version': package.value[0].version
+            }] }}"
+        # no_log: true
+        loop: "{{ ansible_facts.packages | dict2items() }}"
+        loop_control:
+          loop_var: package
+          label: "{{ package.key }}"
+        when: >
+          package.value[0].name | regex_search("^[a-k]")
+
+
+#     - name: Inventory Software [l]
+#        ansible.builtin.set_fact:
+#          cacheable: false
+#         software: "{{ software | default([]) + [{
+#              'name': package.value[0].name,
+#              'category': package.value[0].category | default(''),
+#             'version': package.value[0].version
+#           }] }}"
+#       # no_log: true
+#       loop: "{{ ansible_facts.packages | dict2items() }}"
+#       loop_control:
+#         loop_var: package
+#         label: "{{ package.key }}"
+#       when: >
+#         package.value[0].name | regex_search("^[l]")
+
+
+      - name: Inventory Software [m-z]
+        ansible.builtin.set_fact:
+         cacheable: false
+         software: "{{ software | default([]) + [{
+             'name': package.value[0].name,
+             'category': package.value[0].category | default(''),
+             'version': package.value[0].version
+           }] }}"
+       # no_log: true
+        loop: "{{ ansible_facts.packages | dict2items() }}"
+        loop_control:
+          loop_var: package
+          label: "{{ package.key }}"
+        when: >
+          package.value[0].name | regex_search("^[m-z]")
+
+
+      - name: Inventory Document
+        ansible.builtin.set_fact:
+          report: {
+            "details": "{{ details }}",
+            "os": {
+             "name": "{{ ansible_distribution | lower }}",
+             "version": "{{ ansible_distribution_version }}",
+             "version_major": "{{ ansible_distribution_major_version }}"
+            },
+            "software": "{{ software }}"
+          }
+
+
+      - name: Save report
+        ansible.builtin.copy:
+          content: "{{ report | to_nice_json }}"
+          dest: "/tmp/{{ ansible_hostname }}.json"
+
+    
+      - name: Upload inventory - {{ ansible_hostname }}
+        ansible.builtin.uri:
+          url: |-
+            {{ lookup('env', 'ITSM_API') }}/api/device/inventory
+
+          method: POST
+          body_format: json
+          src: "/tmp/{{ ansible_hostname }}.json"
+          remote_src: true
+          headers:
+            Authorization: Token {{ lookup('env', 'ITSM_TOKEN') }}
+          validate_certs: "{{ lookup('env', 'ITSM_VALIDATE_CERTS') | default(true) | bool }}"
+          timeout: 300
+          status_code:
+            - 200
+            - 201
+        no_log: >    # Contains a secret that logging shows
+          {{ nfc_pb_disable_log | default(true) }}
+  
+
+      always:
+        - name: Remove report
+          ansible.builtin.file:
+            path:  "/tmp/{{ ansible_hostname }}.json"
+            state: absent
+
+  vars:
+
+    nfc_pb_awx_tower_template:
+
+      - name: "Centurion/ITAM/Inventory"
+        ask_tags_on_launch: false
+        ask_inventory_on_launch: true
+        ask_credential_on_launch: true
+        ask_limit_on_launch: true
+        concurrent_jobs_enabled: true
+        description: Collect inventory of host machines and publish to centurion_erp
+        execution_environment: "No Fuss Computing EE"
+        job_type: "run"
+        # job_tags: complete
+        labels:
+          - itsm
+          - itam
+          - inventory
+          - centurion
+        use_fact_cache: true
+        credential_types:
+          - name: 'Playbook/Inventory/Centurion'
+            description: |
+              Credentials for authentication to Centurion_erp
+            inputs: |
+              fields:
+                - id: centurion_url
+                  type: string
+                  label: centurion url
+                  help_text: Ensure that `https://` is prefixed to url
+                - id: centurion_token
+                  type: string
+                  label: api token
+                  secret: true
+                - id: centurion_validate_certs
+                  type: boolean
+                  label: Validate SSL Certificate
+              required:
+                - itsm_api
+                - itsm_token
+            injectors: >
+              env:
+                CENTURION_API: '{{ centurion_url }}'
+                CENTURION_TOKEN: '{{ centurion_token }}'
+                CENTURION_VALIDATE_CERTS: '{{ centurion_validate_certs | default(true) }}'
