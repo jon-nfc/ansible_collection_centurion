@@ -9,11 +9,6 @@ on:
       - completed
 
 
-permissions:
-  contents: read
-  actions: read
-
-
 jobs:
 
   prepare-project-triage: 
