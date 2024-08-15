@@ -45,9 +45,9 @@ jobs:
     uses: nofusscomputing/action_project/.github/workflows/project.yaml@development
     with:
       PROJECT_URL: https://github.com/orgs/nofusscomputing/projects/3
-      TRIAGE_EVENT_NAME: ${{ needs.prepare-project-triage.outputs.triage_event_name }}
-      TRIAGE_EVENT_ACTION: ${{ needs.prepare-project-triage.outputs.triage_event_action }}
-      TRIAGE_ITEM_NUMBER: ${{ needs.prepare-project-triage.outputs.triage_item_number }}
-      TRIAGE_ITEM_URL: ${{ needs.prepare-project-triage.outputs.triage_item_url }}
+      TRIAGE_EVENT_NAME: "${{ needs.prepare-project-triage.outputs.triage_event_name }}"
+      TRIAGE_EVENT_ACTION: "${{ needs.prepare-project-triage.outputs.triage_event_action }}"
+      TRIAGE_ITEM_NUMBER: "${{ needs.prepare-project-triage.outputs.triage_item_number }}"
+      TRIAGE_ITEM_URL: "${{ needs.prepare-project-triage.outputs.triage_item_url }}"
     secrets:
       WORKFLOW_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
