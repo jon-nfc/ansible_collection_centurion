@@ -27,11 +27,43 @@ on:
 jobs:
 
 
+  
   project:
-    name: Project
-    uses: nofusscomputing/action_project/.github/workflows/project.yaml@development
-    with:
-      PROJECT_URL: https://github.com/orgs/nofusscomputing/projects/3
-    secrets:
-      WORKFLOW_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
+    name: Fetch Triage Details
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Collect Triage Details
+        shell: bash
+        run: |
+          echo "triage_event_name=${{ github.event_name }}" > triage_details-project.txt;
+          echo "triage_event_action=${{ github.event.action }}" >> triage_details-project.txt;
+
+          if [ "${{ github.event_name }}" == 'pull_request' ]; then
+          
+            echo "triage_item_number=${{ github.event.pull_request.number }}" >> triage_details-project.txt;
+
+            echo "triage_item_url=https://github.com/${{ github.repository }}/pull/${{ github.event.pull_request.number }}" >> triage_details-project.txt;
+
+          else
+
+            echo "triage_item_number=${{ github.event.issue.number }}" >> triage_details-project.txt;
+
+            echo "triage_item_url=https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}" >> triage_details-project.txt;
+
+          fi;
+
+
+          echo "[Debug]************************************";
+
+          cat triage_details-project.txt;
+
+          echo "[Debug]************************************";
+
+
+      - name: Upload Triage Data
+        uses: actions/upload-artifact@v4
+        with:
+          name: triage-details-project
+          path: triage_details-project.txt
 
