@@ -28,6 +28,7 @@ jobs:
         with:
           name: triage-details-project
           run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.WORKFLOW_TOKEN }}
 
 
       - name: Set Outputs
