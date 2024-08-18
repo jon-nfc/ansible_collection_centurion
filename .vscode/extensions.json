@@ -4,6 +4,9 @@
         "streetsidesoftware.code-spell-checker-australian-english",
         "streetsidesoftware.code-spell-checker",
         "github.vscode-github-actions",
-        "jebbs.markdown-extended"
+        "jebbs.markdown-extended",
+        "njpwerner.autodocstring",
+        "ms-python.python",
+        "ms-python.debugpy"
     ]
 }
