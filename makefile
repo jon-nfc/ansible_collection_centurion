@@ -52,3 +52,6 @@ clean:
 	rm -rf ${PATH_VENV}
 	rm -rf pages
 	rm -rf build
+	rm -rf node_modules
+	rm -f package-lock.json
+	rm -f package.json
