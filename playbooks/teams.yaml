@@ -258,10 +258,11 @@
         job_type: "run"
         # job_tags: complete
         labels:
-          - centurion_erp
-          - itsm
-          - itam
           - access
+          - centurion_erp
+          - itam
+          - itsm
           - permissions
           - teams
         use_fact_cache: true
+

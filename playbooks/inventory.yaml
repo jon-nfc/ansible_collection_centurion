@@ -47,7 +47,7 @@
 
 # https://github.com/nofusscomputing/ansible_collection_centurion/issues/19
 
-# This teask has been commented out due to the above issue
+# This task has been commented out due to the above issue
 
 #     - name: Inventory Software [l]
 #        ansible.builtin.set_fact:
@@ -166,10 +166,11 @@
                   type: boolean
                   label: Validate SSL Certificate
               required:
-                - itsm_api
-                - itsm_token
+                - centurion_api
+                - centurion_token
             injectors: >
               env:
                 CENTURION_API: '{{ centurion_url }}'
                 CENTURION_TOKEN: '{{ centurion_token }}'
                 CENTURION_VALIDATE_CERTS: '{{ centurion_validate_certs | default(true) }}'
+

@@ -1,6 +1,6 @@
 ---
 title: Teams
-description: Creation and patching of teams and permissions.
+description: Ansible Playbook for Creating and patching of Centurion ERP teams, including permissions.
 date: 2024-08-18
 template: project.html
 about: https://github.com/nofusscomputing/ansible_collection_centurion
@@ -16,7 +16,7 @@ The following job template will be created:
 
 
 !!! info 
-    The playbook is able to work with Centurion ERP directly or using the inventory pluggin that is included in this collection.
+    The playbook is able to work with the inventory plugin that is included in this collection.
 
 
 ## Play workflow
@@ -33,17 +33,17 @@ The teams playbook gathers information regarding centurion organisations from th
 
 ## Configuration
 
-The teams playbook uses variables that are gathered from inventory
-The expected structure of the inventory file is:
+The teams playbook uses variables that are gathered from inventory. The expected structure of the inventory file is:
 
 ```yaml
+
 centurion_erp:
   teams:
     - name: "organisation name"
       teams:
-      - name: "team-name"
-        permissions: []
-        notes: "permissions must be a list"
+        - name: "team-name"
+          permissions: []
+          notes: "permissions must be a list"
 
 ```
 
@@ -57,7 +57,12 @@ centurion_erp:
         team_permissions: &team-name-permissions []
         team_name_notes: &team-name-notes "team_notes"
 
+      teams:
+        - name: "organisation name"
+          teams:
+            - name: *team-name
+              permissions: *team-name-permissions
+              notes: *team-name-notes
+
     ```
 
-!!! info "Upcoming feature"
-    With the release of Centurion ERP V1.1 an API request to fetch all permissions that can be applied will be available. 
