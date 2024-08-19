@@ -8,4 +8,5 @@ about: https://github.com/nofusscomputing/ansible_collection_centurion
 
 Available playbooks include:
 
+- [Inventory](./inventory.md)
 - [Teams](./teams.md)
