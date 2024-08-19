@@ -1,1 +1,5 @@
 galaxy.yml galaxy[version-incorrect]
+# This playbook will only ever be run against the centurion host
+playbooks/teams.yaml run-once[task]
+# This task only saves the report on the local machine and is deleted after uploading
+playbooks/inventory.yaml risky-file-permissions

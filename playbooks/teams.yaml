@@ -1,3 +1,4 @@
+---
 - name: Centurion ERP Teams Setup
   hosts: |-
     {%- if nfc_pb_host is defined -%}
@@ -35,7 +36,7 @@
           {{ lookup('env', 'CENTURION_API') }}/api/organization/
         method: GET
         body_format: json
-        headers:  
+        headers:
           authorization: Token {{ lookup('env', 'CENTURION_TOKEN') }}
         validate_certs: "{{ lookup('env', 'VALIDATE_CENTURION_CERTS') | default(true) | bool }}"
         return_content: true
@@ -53,7 +54,7 @@
         url: "{{ item }}"
         method: GET
         body_format: json
-        headers:  
+        headers:
           authorization: Token {{ lookup('env', 'CENTURION_TOKEN') }}
         validate_certs: "{{ lookup('env', 'VALIDATE_CENTURION_CERTS') | default(true) | bool }}"
         return_content: true
@@ -70,60 +71,60 @@
     - name: Create list of Teams
       ansible.builtin.set_fact:
         team_permissions: |
-          [  
-              {% for config_organisation in centurion_erp.teams %}
+          [
+            {% for config_organisation in centurion_erp.teams %}
 
-                {% set ns = namespace(added_teams = []) %}
+              {% set ns = namespace(added_teams = []) %}
 
-                {% for config_team in config_organisation.teams %}
+              {% for config_team in config_organisation.teams %}
 
-                      {% for organization in api_get_permissions.results %}
+                {% for organization in api_get_permissions.results %}
 
-                        {% if organization.json.name == config_organisation.name %}
+                  {% if organization.json.name == config_organisation.name %}
 
-                          {% for team in organization.json.teams %}
+                    {% for team in organization.json.teams %}
 
-                            {% if team.team_name == config_team.name %}
+                      {% if team.team_name == config_team.name %}
 
-                              { 
-                                "organization_id": "{{ organization.json.id }}",
-                                "team_name": "{{ team.team_name }}",
-                                "url": "{{ team.url }}",
-                                "notes": "{{ config_team.notes }}",
-                                "permissions": 
-                                  {{ config_team.permissions }}
-                              },
+                        {
+                          "organization_id": "{{ organization.json.id }}",
+                          "team_name": "{{ team.team_name }}",
+                          "url": "{{ team.url }}",
+                          "notes": "{{ config_team.notes }}",
+                          "permissions":
+                            {{ config_team.permissions }}
+                        },
 
-                              {% set ns.added_teams = ns.added_teams + [ config_team.name ] %}
+                        {% set ns.added_teams = ns.added_teams + [ config_team.name ] %}
 
-                            {% endif %}
+                      {% endif %}
 
-                          {% endfor %}
+                    {% endfor %}
 
-                        {% endif %}
-
-                      {% endfor %}
-
-                        {% if config_team.name not in ns.added_teams %}                            
-                          { 
-                              "organization_id": 
-                                {% for organization in api_get_permissions.results %}
-                                  {% if organization.json.name == config_organisation.name %}
-                                    "{{ organization.json.id }}",
-                                  {% endif %}
-                                {% endfor %}
-                              "team_name": "{{ config_team.name }}",
-                              "notes": "{{ config_team.notes }}",
-                              "permissions": 
-                                {{ config_team.permissions }}
-                          },
-                          {% set ns.added_teams = ns.added_teams + [ config_team.name ] %}
-
-                        {% endif %}
+                  {% endif %}
 
                 {% endfor %}
 
-              {% endfor %}
+                  {% if config_team.name not in ns.added_teams %}
+                    {
+                        "organization_id":
+                          {% for organization in api_get_permissions.results %}
+                            {% if organization.json.name == config_organisation.name %}
+                              "{{ organization.json.id }}",
+                            {% endif %}
+                          {% endfor %}
+                        "team_name": "{{ config_team.name }}",
+                        "notes": "{{ config_team.notes }}",
+                        "permissions":
+                          {{ config_team.permissions }}
+                    },
+                    {% set ns.added_teams = ns.added_teams + [ config_team.name ] %}
+
+                  {% endif %}
+
+            {% endfor %}
+
+          {% endfor %}
           ]
       delegate_to: localhost
       run_once: true
@@ -156,7 +157,7 @@
           {{ nfc_pb_disable_log | default(true) }}
 
 
-    - name: update permissions to include newly created teams
+    - name: Update permissions to include newly created teams
       ansible.builtin.set_fact:
         team_permissions: |
           [
@@ -166,14 +167,12 @@
                       "organization_id": "{{ team.organization_id }}",
                       "team_name": "{{ team.team_name }}",
                       "notes": "{{ team.notes }}",
-                      "permissions": 
+                      "permissions":
                         {{ team.permissions }},
-                      "url": 
+                      "url":
                         {% if team.url is defined %}
                           "{{ team.url }}",
-                          
                         {% elif team.url is not defined %}
-                                            
                           {% for api_values in api_post_teams.results %}
 
                             {% if api_values.item.organization_id == team.organization_id %}
@@ -246,23 +245,23 @@
 
   vars:
 
-  nfc_pb_awx_tower_template:
+    nfc_pb_awx_tower_template:
 
-    - name: "Centurion/Access/Teams"
-      ask_tags_on_launch: false
-      ask_inventory_on_launch: true
-      ask_credential_on_launch: true
-      ask_limit_on_launch: true
-      concurrent_jobs_enabled: true
-      description: Creation and patching of teams and permissions
-      execution_environment: "No Fuss Computing EE"
-      job_type: "run"
-      # job_tags: complete
-      labels:
-        - centurion_erp
-        - itsm
-        - itam
-        - access
-        - permissions
-        - teams
-      use_fact_cache: true
+      - name: "Centurion/Access/Teams"
+        ask_tags_on_launch: false
+        ask_inventory_on_launch: true
+        ask_credential_on_launch: true
+        ask_limit_on_launch: true
+        concurrent_jobs_enabled: true
+        description: Creation and patching of teams and permissions
+        execution_environment: "No Fuss Computing EE"
+        job_type: "run"
+        # job_tags: complete
+        labels:
+          - centurion_erp
+          - itsm
+          - itam
+          - access
+          - permissions
+          - teams
+        use_fact_cache: true

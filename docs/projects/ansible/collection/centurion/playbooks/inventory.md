@@ -18,7 +18,8 @@ On import to AWX / Ansible Automation Platform a credential type will also be cr
 
 
 !!! warning
-    The inventory playbook currently has an issue relating to gathering software starting with L. This issue has been reported and is being worked on https://github.com/nofusscomputing/ansible_collection_centurion/issues/19
+    The inventory playbook currently has an issue relating to gathering software starting with L. This issue has been reported and is being worked on 
+    [github issue 19](https://github.com/nofusscomputing/ansible_collection_centurion/issues/19)
 
 
 ## Play workflow

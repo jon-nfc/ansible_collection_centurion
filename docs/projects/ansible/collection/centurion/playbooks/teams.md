@@ -16,15 +16,15 @@ The following job template will be created:
 
 
 !!! info 
-    The playbook is able to work with centurion ERP directly or using the inventory pluggin that is included in this collection.
+    The playbook is able to work with Centurion ERP directly or using the inventory pluggin that is included in this collection.
 
 
 ## Play workflow
 
 The teams playbook gathers information regarding centurion organisations from the ansible inventory. Using this information the play is designed to create new teams, patch permissions and patch notes. The workflow for the playbook is as follows
 
-- Fetch all organisations from centurion
-- Fetch all existing teams within each organisation from centurion
+- Fetch all organisations from Centurion ERP
+- Fetch all existing teams within each organisation from Centurion ERP
 - Fetch any teams to be created from inventory
 - Create new teams
 - Patch all teams with required permissions
