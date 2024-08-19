@@ -1,6 +1,6 @@
 ---
 title: Teams
-description: No Fuss Computings Companion Ansible Collection Centurion teams Playbook.
+description: Creation and patching of teams and permissions.
 date: 2024-08-18
 template: project.html
 about: https://github.com/nofusscomputing/ansible_collection_centurion
@@ -14,7 +14,6 @@ The following job template will be created:
 
 *  **Centurion/Access/Teams** Creation and patching of teams and permissions
 
-On import to AWX / Ansible Automation Platform a credential type will also be created, `Playbook/teams/centurion` that can be used to supply the required secrets and Centurion host.
 
 !!! info 
     The playbook is able to work with centurion ERP directly or using the inventory pluggin that is included in this collection.
@@ -59,3 +58,6 @@ centurion_erp:
         team_name_notes: &team-name-notes "team_notes"
 
     ```
+
+!!! info "Upcoming feature"
+    With the release of Centurion ERP V1.1 an API request to fetch all permissions that can be applied will be available. 
