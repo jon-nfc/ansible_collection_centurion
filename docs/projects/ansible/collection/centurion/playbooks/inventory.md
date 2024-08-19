@@ -1,6 +1,6 @@
 ---
 title: Inventory
-description: Inventory devices and publish to Centurion ERP
+description: Ansible Playbook to inventroy devices and publish to Centurion ERP
 date: 2024-08-19
 template: project.html
 about: https://github.com/nofusscomputing/ansible_collection_centurion
