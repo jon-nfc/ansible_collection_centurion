@@ -29,6 +29,12 @@ nav:
 
         - projects/ansible/collection/centurion/index.md
 
+        - Playbooks:
+
+          - projects/ansible/collection/centurion/playbooks/index.md
+
+          - projects/ansible/collection/centurion/playbooks/teams.md
+        
         - Plugins:
 
           - projects/ansible/collection/centurion/plugins/index.md
