@@ -248,7 +248,7 @@
 
   nfc_pb_awx_tower_template:
 
-    - name: "Centurion/access/teams"
+    - name: "Centurion/Access/Teams"
       ask_tags_on_launch: false
       ask_inventory_on_launch: true
       ask_credential_on_launch: true
@@ -266,28 +266,3 @@
         - permissions
         - teams
       use_fact_cache: true
-      credential_types:
-        - name: 'Playbook/teams/centurion'
-          description: |
-            Credentials for authentication to centurion_erp
-          inputs: |
-            fields:
-              - id: centurion_url
-                type: string
-                label: centurion url
-                help_text: Ensure that `https://` is prefixed to url
-              - id: centurion_token
-                type: string
-                label: api token
-                secret: true
-              - id: centurion_validate_certs
-                type: boolean
-                label: Validate SSL Certificate
-            required:
-              - itsm_api
-              - itsm_token
-          injectors: >
-            env:
-              CENTURION_API: '{{ centurion_url }}'
-              CENTURION_TOKEN: '{{ centurion_token }}'
-              CENTURION_VALIDATE_CERTS: '{{ centurion_validate_certs | default(true) }}'
