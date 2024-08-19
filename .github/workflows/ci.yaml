@@ -16,6 +16,17 @@ env:
 jobs:
 
 
+  mkdocs:
+    name: 'MKDocs'
+    permissions:
+      pull-requests: write
+      contents: write
+      statuses: write
+      checks: write
+      actions: write
+    uses: nofusscomputing/action_mkdocs/.github/workflows/reusable_mkdocs.yaml@development
+
+
   collection:
     name: 'Ansible Collection'
     uses: nofusscomputing/action_ansible_collection/.github/workflows/reusable_ansible_collection.yaml@development
