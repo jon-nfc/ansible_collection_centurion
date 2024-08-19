@@ -1,1 +1,8 @@
 galaxy.yml galaxy[version-incorrect]
+
+# N/A as the play runs on the ansible controller and should only run once.
+playbooks/teams.yaml run-once[task]
+
+# N/A as the play runs on the ansible controller using permissions of executing user.
+playbooks/inventory.yaml risky-file-permissions
+
