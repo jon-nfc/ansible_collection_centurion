@@ -16,7 +16,7 @@ The following job template will be created:
 
 
 !!! info 
-    The playbook is able to work with the inventory plugin that is included in this collection.
+    The playbook is able to work with the [inventory plugin](../plugins/index.md) that is included in this collection.
 
 
 ## Play workflow
