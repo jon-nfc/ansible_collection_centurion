@@ -23,6 +23,13 @@ jobs:
 
   bump:
     name: 'Bump'
+    permissions:
+      issues: write
+      contents: write
+      actions: read
+      statuses: read
+      checks: write
+      packages: write
     uses: nofusscomputing/action_bump/.github/workflows/bump.yaml@development
     with:
       CZ_PRE_RELEASE: ${{ inputs.CZ_PRE_RELEASE }}

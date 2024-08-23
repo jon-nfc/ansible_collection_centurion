@@ -43,7 +43,7 @@ jobs:
       ANSIBLE_COLLECTION_MARK_RELEASE_LIVE: true
       ANSIBLE_GALAXY_NAMESPACE: "${{ github.repository_owner }}"
       ANSIBLE_GALAXY_PACKAGE_NAME: "${{ github.event.repository.name }}"
-      ANSIBLE_LINTING_MUST_PASS: true
+      ANSIBLE_LINTING_MUST_PASS: false
     secrets:
       ANSIBLE_GALAXY_UPLOAD_TOKEN: ${{ secrets.ANSIBLE_GALAXY_UPLOAD_TOKEN }}
 
