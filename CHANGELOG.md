@@ -1,3 +1,15 @@
+## 0.4.0 (2024-08-23)
+
+### Feat
+
+- **playbook**: Add playbook for teams creation and permissions
+- **playbook**: Add playbook for inventory collection and publish to centurion
+
+### Fix
+
+- **teams_playbook**: Delete ansible.cfg
+- **teams**: replace PATCH -> POST
+
 ## 0.3.0 (2024-07-31)
 
 ### Feat
