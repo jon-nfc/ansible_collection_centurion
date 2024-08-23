@@ -1,0 +1,85 @@
+
+---
+
+name: Triage
+
+
+on:
+  issues:
+    types:
+      - opened
+      - labeled
+      - reopened
+      - transferred
+      - milestoned
+      - demilestoned
+      - closed
+      - assigned
+  pull_request: 
+    types:
+      - opened
+      - labeled
+      - edited
+      - assigned
+      - reopened
+      - closed
+
+
+
+jobs:
+
+
+  debug:
+    name: Debug
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Variables
+        run: |
+          echo "[Debug] github.actor=${{ github.actor }}";
+          echo "[Debug] github.event.action=${{ github.event.action }}";
+          echo "[Debug] github.event.pull_request.author_association=${{ github.event.pull_request.author_association }}";
+          echo "[Debug] github.event_name=${{ github.event_name }}";
+          echo "[Debug] github.repository=${{ github.repository }}";
+          echo "[Debug] github.triggering_actor=${{ github.triggering_actor }}";
+
+
+  project:
+    name: Fetch Triage Details
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Collect Triage Details
+        shell: bash
+        run: |
+          echo "triage_event_name=${{ github.event_name }}" > triage_details-project.txt;
+          echo "triage_event_action=${{ github.event.action }}" >> triage_details-project.txt;
+
+          if [ "${{ github.event_name }}" == 'pull_request' ]; then
+          
+            echo "triage_item_number=${{ github.event.pull_request.number }}" >> triage_details-project.txt;
+
+            echo "triage_item_url=https://github.com/${{ github.repository }}/pull/${{ github.event.pull_request.number }}" >> triage_details-project.txt;
+
+          else
+
+            echo "triage_item_number=${{ github.event.issue.number }}" >> triage_details-project.txt;
+
+            echo "triage_item_url=https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}" >> triage_details-project.txt;
+
+          fi;
+
+
+          echo "[Debug]************************************";
+
+          cat triage_details-project.txt;
+
+          echo "[Debug]************************************";
+
+
+      - name: Upload Triage Data
+        uses: actions/upload-artifact@v4
+        with:
+          name: triage-details-project
+          path: triage_details-project.txt
+

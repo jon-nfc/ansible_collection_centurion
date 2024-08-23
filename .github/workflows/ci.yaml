@@ -1,0 +1,105 @@
+---
+
+name: 'CI'
+
+
+on:
+  pull_request:
+    types:
+      - synchronize
+  push:
+    branches:
+      - '**'
+    tags:
+      - '*'
+
+env:
+  GIT_SYNC_URL: "https://${{ secrets.GITLAB_USERNAME_ROBOT }}:${{ secrets.GITLAB_TOKEN_ROBOT }}@gitlab.com/nofusscomputing/projects/ansible/collections/centurion_erp_collection.git"
+
+jobs:
+
+
+  mkdocs:
+    name: 'MKDocs'
+    permissions:
+      pull-requests: write
+      contents: write
+      statuses: write
+      checks: write
+      actions: write
+    uses: nofusscomputing/action_mkdocs/.github/workflows/reusable_mkdocs.yaml@development
+
+
+  collection:
+    name: 'Ansible Collection'
+    uses: nofusscomputing/action_ansible_collection/.github/workflows/reusable_ansible_collection.yaml@development
+    permissions:
+      pull-requests: write
+      contents: write
+      statuses: write
+      checks: write
+      actions: write
+    with:
+      ANSIBLE_COLLECTION_MARK_RELEASE_LIVE: true
+      ANSIBLE_GALAXY_NAMESPACE: "${{ github.repository_owner }}"
+      ANSIBLE_GALAXY_PACKAGE_NAME: "${{ github.event.repository.name }}"
+      ANSIBLE_LINTING_MUST_PASS: true
+    secrets:
+      ANSIBLE_GALAXY_UPLOAD_TOKEN: ${{ secrets.ANSIBLE_GALAXY_UPLOAD_TOKEN }}
+
+
+  gitlab-mirror:
+    if: ${{ github.repository == 'nofusscomputing/ansible_collection_centurion' }}
+    runs-on: ubuntu-latest
+    steps:
+
+
+      - name: Checks
+        shell: bash
+        run: |
+          if [ "0${{ env.GIT_SYNC_URL }}" == "0" ]; then
+
+            echo "[ERROR] you must define variable GIT_SYNC_URL for mirroring this repository.";
+
+            exit 1;
+
+          fi
+
+
+      - name: clone
+        shell: bash
+        run: |
+
+          git clone --mirror https://github.com/${{ github.repository }} repo;
+
+          ls -la repo/
+
+
+      - name: add remote
+        shell: bash
+        run: |
+
+          cd repo;
+
+          echo "**************************************** - git remote -v";
+
+          git remote -v;
+
+          echo "****************************************";
+
+          git remote add destination $GIT_SYNC_URL;
+
+
+      - name: push branches
+        shell: bash
+        run: |
+
+          cd repo;
+
+          echo "**************************************** - git branch";
+
+          git branch;
+
+          echo "****************************************";
+
+          git push destination --mirror || true;

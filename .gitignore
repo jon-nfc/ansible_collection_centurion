@@ -1,0 +1,12 @@
+__pycache__
+build
+pages
+*.junit.xml
+
+
+## Make prepare items
+node_modules/
+package-lock.json
+package.json
+.markdownlint.json
+.markdownlint-cli2.jsonc

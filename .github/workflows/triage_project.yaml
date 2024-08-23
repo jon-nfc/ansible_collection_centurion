@@ -1,0 +1,53 @@
+---
+
+name: 'Project'
+on:
+  workflow_run:
+    workflows:
+      - 'Triage'
+    types:
+      - completed
+
+
+jobs:
+
+  prepare-project-triage: 
+    name: Project Triage
+    runs-on: ubuntu-latest
+    outputs:
+      triage_event_name: ${{ steps.triage-output.outputs.triage_event_name }}
+      triage_event_action: ${{ steps.triage-output.outputs.triage_event_action }}
+      triage_item_number: ${{ steps.triage-output.outputs.triage_item_number }}
+      triage_item_url: ${{ steps.triage-output.outputs.triage_item_url }}
+    steps:
+
+      ## Additional Steps
+
+      - name: Fetch triage Details
+        uses: actions/download-artifact@v4
+        with:
+          name: triage-details-project
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.WORKFLOW_TOKEN }}
+
+
+      - name: Set Outputs
+        id: triage-output
+        shell: bash
+        run: |
+          cat triage_details-project.txt > $GITHUB_OUTPUT
+
+
+  project:
+    name: Project
+    needs:
+      - prepare-project-triage
+    uses: nofusscomputing/action_project/.github/workflows/project.yaml@development
+    with:
+      PROJECT_URL: https://github.com/orgs/nofusscomputing/projects/3
+      TRIAGE_EVENT_NAME: "${{ needs.prepare-project-triage.outputs.triage_event_name }}"
+      TRIAGE_EVENT_ACTION: "${{ needs.prepare-project-triage.outputs.triage_event_action }}"
+      TRIAGE_ITEM_NUMBER: "${{ needs.prepare-project-triage.outputs.triage_item_number }}"
+      TRIAGE_ITEM_URL: "${{ needs.prepare-project-triage.outputs.triage_item_url }}"
+    secrets:
+      WORKFLOW_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
