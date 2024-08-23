@@ -219,7 +219,7 @@
           {{ nfc_pb_disable_log | default(true) }}
 
 
-    - name: replace team notes
+    - name: Replace team notes
       ansible.builtin.uri:
         url: |-
           {{ item.url }}

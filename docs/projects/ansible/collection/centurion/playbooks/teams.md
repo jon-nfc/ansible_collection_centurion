@@ -24,11 +24,18 @@ The following job template will be created:
 The teams playbook gathers information regarding centurion organisations from the ansible inventory. Using this information the play is designed to create new teams with permissions and notes. The workflow for the playbook is as follows
 
 - Fetch all organisations from Centurion ERP
+
 - Fetch all existing teams within each organisation from Centurion ERP
+
 - Fetch any teams to be created from inventory
+
 - Create new teams
-- POST all teams with required permissions
-- POST all teams with required notes
+
+- for each team
+
+    - Replace the team permissions
+
+    - Replace the contents of the notes field
 
 
 ## Configuration
