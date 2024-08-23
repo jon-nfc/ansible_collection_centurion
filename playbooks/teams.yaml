@@ -198,11 +198,11 @@
           {{ nfc_pb_disable_log | default(true) }}
 
 
-    - name: Patch team permissions
+    - name: Replace team permissions
       ansible.builtin.uri:
         url: |-
           {{ item.url }}permissions
-        method: PATCH
+        method: POST
         body_format: json
         body: "{{ item.permissions }}"
         headers:
@@ -219,7 +219,7 @@
           {{ nfc_pb_disable_log | default(true) }}
 
 
-    - name: Patch team notes
+    - name: Replace team notes
       ansible.builtin.uri:
         url: |-
           {{ item.url }}

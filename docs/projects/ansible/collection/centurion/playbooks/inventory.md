@@ -27,7 +27,10 @@ On import to AWX / Ansible Automation Platform a credential type will also be cr
 The inventory playbook conducts the follwoing tasks:
 
 - Gathers host information
+
 - Gathers sofware information
+
 - Uploads the inventory report to Centurion ERP
+
 - Cleans any leftover files used to create the reports
 
