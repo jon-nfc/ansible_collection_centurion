@@ -1,0 +1,151 @@
+---
+- name: GLPI to Centurion ERP Migration
+  hosts: |-
+    {%- if nfc_pb_host is defined -%}
+      {{ nfc_pb_host }}
+    {%- else -%}
+      all
+    {%- endif %}
+  become: false
+  gather_facts: false
+  connection: local # Play uses HTTP requests ONLY!
+
+
+  tasks:
+
+
+    - name: Collect session token from GLPI (testing)
+      ansible.builtin.uri:
+        url: |-
+          {{ http_protocol | default('https') | string }}://{{ lookup('env', 'nfc_pb_glpi_host') }}/apirest.php/initSession
+        method: "{{ glpi_api_request_method | default('GET') }}"
+        return_content: true
+        headers:
+          Authorization: user_token {{ lookup('env', 'nfc_pb_glpi_user_token') }}
+          App-Token: "{{ lookup('env', 'nfc_pb_glpi_app_token') }}"
+        validate_certs: "{{ lookup('env', 'nfc_pb_glpi_validate_certs') | default(true) | bool }}"
+        status_code:
+          - 200
+      register: nfc_pb_glpi_session_id
+      run_once: true
+      delegate_to: localhost
+
+
+## Get Tickets from GLPI
+    
+    - name: Collect tickets from GLPI (testing)
+      ansible.builtin.uri:
+        url: "{{ http_protocol | default('https') | string }}://{{ lookup('env', 'nfc_pb_glpi_host') }}/apirest.php/Ticket/840"
+        method: "{{ glpi_api_request_method | default('GET') }}"
+        return_content: true
+        status_code: 
+          - 200
+        headers:
+          App-Token: "{{ lookup('env', 'nfc_pb_glpi_app_token') }}"
+          Session-Token: "{{ nfc_pb_glpi_session_id.json.session_token }}"
+        validate_certs: "{{ nfc_pb_glpi_validate_certs | default(true) | bool }}"
+##      no_log: "{{ nfc_pb_glpi_no_log_sensitive_data | default(true) | bool }}"
+      register: glpi_api_request_tickets
+      delegate_to: localhost
+      run_once: true
+      vars:
+        ansible_connection: local
+
+## Check Centurion to ensure ticket does not exist. external_ref (ticket #) external_system (type #) does id = external_ref
+
+## For each ticket Upload to Centurion ERP POST extrnal_system # external_id #
+
+## Once uploaded need to identify that it has been migrated? Report?
+
+## external_system numbers
+
+## issues/requests 3
+## problems 4
+## changes 5
+## computers 6
+
+## how to deal with documents?
+
+## linking of items
+
+
+## Computers
+
+    - name: Collect computers from GLPI (testing)
+      ansible.builtin.uri:
+        url: "{{ http_protocol | default('https') | string }}://{{ lookup('env', 'nfc_pb_glpi_host') }}/apirest.php/Computer/11"
+        method: "{{ glpi_api_request_method | default('GET') }}"
+        return_content: true
+        status_code: 
+          - 200
+        headers:
+          App-Token: "{{ lookup('env', 'nfc_pb_glpi_app_token') }}"
+          Session-Token: "{{ nfc_pb_glpi_session_id.json.session_token }}"
+        validate_certs: "{{ nfc_pb_glpi_validate_certs | default(true) | bool }}"
+##      no_log: "{{ nfc_pb_glpi_no_log_sensitive_data | default(true) | bool }}"
+      register: glpi_api_request_computers
+      delegate_to: localhost
+      run_once: true
+      vars:
+        ansible_connection: local
+
+
+## Do not have permission for this........
+
+#     - name: Collect entity from GLPI (testing)
+#       ansible.builtin.uri:
+#         url: "{{ http_protocol | default('https') | string }}://{{ lookup('env', 'nfc_pb_glpi_host') }}/apirest.php/Entity"
+#         method: "{{ glpi_api_request_method | default('GET') }}"
+#         return_content: true
+#         status_code: 
+#           - 200
+#         headers:
+#           App-Token: "{{ lookup('env', 'nfc_pb_glpi_app_token') }}"
+#           Session-Token: "{{ nfc_pb_glpi_session_id.json.session_token }}"
+#         validate_certs: "{{ nfc_pb_glpi_validate_certs | default(true) | bool }}"
+#      no_log: "{{ nfc_pb_glpi_no_log_sensitive_data | default(true) | bool }}"
+#       register: glpi_api_request_computers
+#       delegate_to: localhost
+#       run_once: true
+#       vars:
+#         ansible_connection: local
+
+
+    - name: Kill session token from GLPI (testing)
+      ansible.builtin.uri:
+        url: |-
+          {{ http_protocol | default('https') | string }}://{{ lookup('env', 'nfc_pb_glpi_host') }}/apirest.php/killSession
+        method: "{{ glpi_api_request_method | default('GET') }}"
+        return_content: true
+        headers:
+          Session-Token: "{{ nfc_pb_glpi_session_id.json.session_token }}"
+          App-Token: "{{ lookup('env', 'nfc_pb_glpi_app_token') }}"
+        validate_certs: "{{ lookup('env', 'nfc_pb_glpi_validate_certs') | default(true) | bool }}"
+        status_code:
+          - 200
+      register: nfc_pb_glpi_session_id
+      run_once: true
+      delegate_to: localhost
+
+  vars:
+
+    nfc_pb_awx_tower_template:
+
+      - name: "Glpi/Centurion/Migration"
+        ask_tags_on_launch: false
+        ask_inventory_on_launch: true
+        ask_credential_on_launch: true
+        ask_limit_on_launch: true
+        concurrent_jobs_enabled: true
+        description: Migration from GLPI to Centurion ERP
+        execution_environment: "No Fuss Computing EE"
+        job_type: "run"
+        # job_tags: complete
+        labels:
+          - centurion_erp
+          - glpi
+          - itam
+          - itsm
+          - ticketing
+        use_fact_cache: true
+
