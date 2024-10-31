@@ -103,23 +103,24 @@
 
 
         - name: Upload inventory - {{ ansible_hostname }}
-          ansible.builtin.uri:
-            url: |-
-              {{ lookup('env', 'ITSM_API') }}/api/device/inventory
-
-            method: POST
-            body_format: json
-            src: "/tmp/{{ ansible_hostname }}.json"
-            remote_src: true
-            headers:
-              Authorization: Token {{ lookup('env', 'ITSM_TOKEN') }}
-            validate_certs: "{{ lookup('env', 'ITSM_VALIDATE_CERTS') | default(true) | bool }}"
-            timeout: 300
-            status_code:
-              - 200
-              - 201
-          no_log: >    # Contains a secret that logging shows
-            {{ nfc_pb_disable_log | default(true) }}
+          block:
+            - ansible.builtin.uri:
+                url: "{{ lookup('env', 'ITSM_API') }}/api/device/inventory"
+                method: POST
+                body_format: json
+                src: "/tmp/{{ ansible_hostname }}.json"
+                remote_src: true
+                headers:
+                  Authorization: Token {{ lookup('env', 'ITSM_TOKEN') }}
+                  validate_certs: "{{ lookup('env', 'ITSM_VALIDATE_CERTS') | default(true) | bool }}"
+                status_code:
+                  - 200
+                  - 201
+                no_log: >    # Contains a secret that logging shows
+                    {{ nfc_pb_disable_log | default(true) }}
+          rescue:
+            - debug:
+                msg: "Error uploading inventory: HTTP status {{ result.status }} - {{ result.msg }}"
 
 
       always:
