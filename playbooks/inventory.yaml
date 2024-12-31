@@ -105,15 +105,15 @@
         - name: Upload inventory - {{ ansible_hostname }}
           ansible.builtin.uri:
             url: |-
-              {{ lookup('env', 'ITSM_API') }}/api/v2/itam/inventory
+              {{ lookup('env', 'CENTURION_API') }}/api/v2/itam/inventory
 
             method: POST
             body_format: json
             src: "/tmp/{{ ansible_hostname }}.json"
             remote_src: true
             headers:
-              Authorization: Token {{ lookup('env', 'ITSM_TOKEN') }}
-            validate_certs: "{{ lookup('env', 'ITSM_VALIDATE_CERTS') | default(true) | bool }}"
+              Authorization: Token {{ lookup('env', 'CENTURION_TOKEN') }}
+            validate_certs: "{{ lookup('env', 'CENTURION_VALIDATE_CERTS') | default(true) | bool }}"
             timeout: 300
             status_code:
               - 200
