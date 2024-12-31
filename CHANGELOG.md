@@ -1,3 +1,11 @@
+## 0.4.2 (2024-12-31)
+
+### Fix
+
+- **playbook**: Use API v2 path for Teams
+- **playbook**: use API v2 path for Teams
+- **playbook**: use API v2 path for uploading inventory
+
 ## 0.4.1 (2024-08-23)
 
 ### Fix
