@@ -105,7 +105,7 @@
         - name: Upload inventory - {{ ansible_hostname }}
           ansible.builtin.uri:
             url: |-
-              {{ lookup('env', 'ITSM_API') }}/api/device/inventory
+              {{ lookup('env', 'ITSM_API') }}/api/v2/itam/inventory
 
             method: POST
             body_format: json
