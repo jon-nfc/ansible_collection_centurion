@@ -56,7 +56,8 @@ centurion_erp:
 
 !!! tip "common teams"
     Common teams can be created by using yaml anchors. This is useful when multiple organisations require a common team and permissions to be set.
-
+    <!-- markdownlint-disable -->
+    <!-- markdownlint-disable-next-line code-block-style -->
     ```yaml
     centurion_erp:
       common_teams:
@@ -72,4 +73,4 @@ centurion_erp:
               notes: *team-name-notes
 
     ```
-
+    <!-- markdownlint-restore -->

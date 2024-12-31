@@ -173,4 +173,3 @@
                 CENTURION_API: '{{ centurion_url }}'
                 CENTURION_TOKEN: '{{ centurion_token }}'
                 CENTURION_VALIDATE_CERTS: '{{ centurion_validate_certs | default(true) }}'
-
