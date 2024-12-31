@@ -33,7 +33,7 @@
     - name: Collect organizations from centurion ERP
       ansible.builtin.uri:
         url: |-
-          {{ lookup('env', 'CENTURION_API') }}/api/organization/
+          {{ lookup('env', 'CENTURION_API') }}/api/v2/access/organization/
         method: GET
         body_format: json
         headers:
@@ -135,7 +135,7 @@
     - name: Create new teams in centurion_ERP
       ansible.builtin.uri:
         url: |-
-          {{ lookup('env', 'CENTURION_API') }}/api/organization/{{ item.organization_id }}/team
+          {{ lookup('env', 'CENTURION_API') }}/api/v2/access/organization/{{ item.organization_id }}/team
         method: POST
         body_format: json
         body: |-
@@ -265,4 +265,3 @@
           - permissions
           - teams
         use_fact_cache: true
-

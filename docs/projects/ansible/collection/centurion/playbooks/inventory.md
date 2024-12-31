@@ -12,14 +12,13 @@ The inventory playbook includes the [AWX Feature](../../../playbooks/awx.md) to 
 
 The following job template will be created:
 
-*  **Centurion/ITAM/Inventory** Inventory host machines and publish to Centurion ERP
+- **Centurion/ITAM/Inventory** Inventory host machines and publish to Centurion ERP
 
 On import to AWX / Ansible Automation Platform a credential type will also be created, 'Collection/No Fuss Computing/Centurion/API' that can be used to supply the required secrets and Centurion host.
 
 
 !!! warning
-    The inventory playbook currently has an issue relating to gathering software starting with L. This issue has been reported and is being worked on 
-    [github issue 19](https://github.com/nofusscomputing/ansible_collection_centurion/issues/19)
+    The inventory playbook currently has an issue relating to gathering software starting with L. This issue has been reported and is being worked on [github issue 19](https://github.com/nofusscomputing/ansible_collection_centurion/issues/19)
 
 
 ## Play workflow
@@ -33,4 +32,3 @@ The inventory playbook conducts the follwoing tasks:
 - Uploads the inventory report to Centurion ERP
 
 - Cleans any leftover files used to create the reports
-
