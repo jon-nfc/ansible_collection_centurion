@@ -12,10 +12,10 @@ The teams playbook includes the [AWX Feature](../../../playbooks/awx.md) to impo
 
 The following job template will be created:
 
-*  **Centurion/Access/Teams** Creation and patching of teams and permissions
+- **Centurion/Access/Teams** Creation and patching of teams and permissions
 
 
-!!! info 
+!!! info
     The playbook is able to work with the [inventory plugin](../plugins/index.md) that is included in this collection.
 
 
