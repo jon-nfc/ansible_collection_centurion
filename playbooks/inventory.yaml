@@ -132,12 +132,13 @@
 
             - name: Trace - Show Upload Details
               ansible.builtin.debug:
-                - |
-                  Upload failed with:
-                  * URL: {{ api_post_inventory.url }}
-                  * HTTP status code: {{ api_post_inventory.status }}
-                  * Message: {{ api_post_inventory.msg }}
-                  * Body: {{ api_post_inventory.json }}
+                msg:
+                  - |
+                    Upload failed with:
+                    * URL: {{ api_post_inventory.url }}
+                    * HTTP status code: {{ api_post_inventory.status }}
+                    * Message: {{ api_post_inventory.msg }}
+                    * Body: {{ api_post_inventory.json }}
 
 
       always:
