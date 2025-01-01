@@ -1,3 +1,9 @@
+## 0.5.1 (2025-01-01)
+
+### Fix
+
+- **playbook**: Add Trace output for inventory upload
+
 ## 0.5.0 (2025-01-01)
 
 ### Feat
