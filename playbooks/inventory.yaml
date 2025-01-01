@@ -102,24 +102,42 @@
             dest: "/tmp/{{ ansible_hostname }}.json"
 
 
-        - name: Upload inventory - {{ ansible_hostname }}
-          ansible.builtin.uri:
-            url: |-
-              {{ lookup('env', 'ITSM_API') }}/api/v2/itam/inventory
+        - name: Try / catch
+          block:
 
-            method: POST
-            body_format: json
-            src: "/tmp/{{ ansible_hostname }}.json"
-            remote_src: true
-            headers:
-              Authorization: Token {{ lookup('env', 'ITSM_TOKEN') }}
-            validate_certs: "{{ lookup('env', 'ITSM_VALIDATE_CERTS') | default(true) | bool }}"
-            timeout: 300
-            status_code:
-              - 200
-              - 201
-          no_log: >    # Contains a secret that logging shows
-            {{ nfc_pb_disable_log | default(true) }}
+
+            - name: Upload inventory - {{ ansible_hostname }}
+              ansible.builtin.uri:
+                url: |-
+                  {{ lookup('env', 'CENTURION_API') }}/api/v2/itam/inventory
+
+                method: POST
+                body_format: json
+                src: "/tmp/{{ ansible_hostname }}.json"
+                remote_src: true
+                headers:
+                  Authorization: Token {{ lookup('env', 'CENTURION_TOKEN') }}
+                validate_certs: "{{ lookup('env', 'CENTURION_VALIDATE_CERTS') | default(true) | bool }}"
+                timeout: 300
+                status_code:
+                  - 200
+                  - 201
+              no_log: >    # Contains a secret that logging shows
+                {{ nfc_pb_disable_log | default(true) }}
+              register: api_post_inventory
+
+
+          always:
+
+
+            - name: Trace - Show Upload Details
+              ansible.builtin.debug:
+                - |
+                  Upload failed with:
+                  * URL: {{ api_post_inventory.url }}
+                  * HTTP status code: {{ api_post_inventory.status }}
+                  * Message: {{ api_post_inventory.msg }}
+                  * Body: {{ api_post_inventory.json }}
 
 
       always:
@@ -127,6 +145,7 @@
           ansible.builtin.file:
             path: "/tmp/{{ ansible_hostname }}.json"
             state: absent
+
 
   vars:
 
