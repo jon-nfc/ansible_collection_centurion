@@ -1,3 +1,13 @@
+## 0.5.0 (2025-01-01)
+
+### Feat
+
+- **playbook**: Add Trace output for inventory upload
+
+### Fix
+
+- **playbook**: Correct Centurion ENV Vars
+
 ## 0.4.2 (2024-12-31)
 
 ### Fix
