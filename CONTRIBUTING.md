@@ -1,5 +1,26 @@
 # Contribution Guide
 
+First and foremost, thank you for your contribution. If at any stage you are stuck, confused or any other developer prone state, please ask for help.
+
+
+## Requirements
+
+- Commit Messages use [conventional commit](https://www.conventionalcommits.org/en/v1.0.0/) format
+- **ALL** CI jobs must pass. if they error, you can view the "details" for what went wrong.
+
+- Ansible:
+
+    - Tasks must be named
+    - Task name must reflect their activity
+    - All task modules to use FQCN
+    - Don't be afraid of white space.
+        - Two blanks lines above tasks
+        - Two blank lines blow tasks
+        - One blank line at the end of the file
+    - Any task that "spills" a secret, must use `no_log`
+
+
+## Dev Env
 Development of this project has been setup to be done from VSCodium. The following additional requirements need to be met:
 
 - npm has been installed. _required for `markdown` linting_
